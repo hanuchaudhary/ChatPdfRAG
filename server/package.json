@@ -5,17 +5,30 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node build/index.js"
+    "start": "tsc && node build/index.js",
+    "start:worker": "tsc && node build/worker.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "dependencies": {
+    "@google/genai": "^0.13.0",
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/community": "^0.3.42",
+    "@langchain/core": "^0.3.55",
+    "@langchain/google-genai": "^0.2.7",
+    "@langchain/openai": "^0.5.10",
+    "@langchain/qdrant": "^0.1.2",
+    "@qdrant/js-client-rest": "^1.14.0",
     "@types/express": "^5.0.1",
+    "bullmq": "^5.52.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "multer": "1.4.5-lts.2"
+    "langchain": "^0.3.24",
+    "multer": "1.4.5-lts.2",
+    "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
