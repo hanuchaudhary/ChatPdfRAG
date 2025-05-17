@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { BACKEND_URL } from "@/config"
 import { toast } from "sonner"
-import { Trash, Copy, Send, Upload, FileText, ChevronDown, BookOpen } from "lucide-react"
+import { Trash, Copy, Upload, ChevronDown, BookOpen } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Badge } from "@/components/ui/badge"
+import { FileUpload } from "@/components/ui/file-upload"
 
 interface DocReference {
   pageContent: string
@@ -24,7 +25,6 @@ interface DocReference {
   id: string
 }
 
-// Enhanced message type to include references
 interface Message {
   sender: "user" | "bot"
   text: string
@@ -44,25 +44,6 @@ export default function ChatToPdfPage() {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
     }
   }, [messages])
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
-    const file = e.dataTransfer.files[0]
-    if (file && file.type === "application/pdf") {
-      setPdfFile(file)
-      setPdfUrl(URL.createObjectURL(file))
-    } else {
-      toast.error("Please upload a PDF file")
-    }
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file && file.type === "application/pdf") {
-      setPdfFile(file)
-      setPdfUrl(URL.createObjectURL(file))
-    }
-  }
 
   const handleFileUpload = async () => {
     if (!pdfFile) return
@@ -84,7 +65,10 @@ export default function ChatToPdfPage() {
       toast.success("File uploaded successfully!")
       setMessages((msgs) => [
         ...msgs,
-        { sender: "bot", text: "PDF uploaded successfully. You can now ask questions about it." },
+        {
+          sender: "bot",
+          text: "PDF uploaded successfully. You can now ask questions about it.",
+        },
       ])
     } catch (error) {
       toast.error("Error uploading file.")
@@ -127,8 +111,6 @@ export default function ChatToPdfPage() {
       }
 
       const data = await response.json()
-
-      // Store both the response text and the reference documents
       setMessages((msgs) => [
         ...msgs,
         {
@@ -141,7 +123,10 @@ export default function ChatToPdfPage() {
       console.error("Error sending message:", error)
       setMessages((msgs) => [
         ...msgs,
-        { sender: "bot", text: "Sorry, I encountered an error processing your request." },
+        {
+          sender: "bot",
+          text: "Sorry, I encountered an error processing your request.",
+        },
       ])
       toast.error("Error getting response")
     } finally {
@@ -163,28 +148,21 @@ export default function ChatToPdfPage() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-background">
-      <div className="w-full md:w-1/2 flex flex-col items-center justify-center">
-
+    <div className="max-w-7xl mx-auto flex flex-col gap-3 md:flex-row md:h-[93vh] h-screen overflow-hidden bg-background">
+      <div className="w-full md:w-[40%] flex flex-col items-center justify-center p-4">
         {!pdfFile ? (
-          <div
-            className="w-full max-w-md border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center p-8 cursor-pointer hover:border-primary transition"
-            onDrop={handleDrop}
-            onDragOver={(e) => e.preventDefault()}
-            onClick={() => document.getElementById("pdf-upload-input")?.click()}
-          >
-            <input
-              id="pdf-upload-input"
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              onChange={handleFileChange}
+          <div className="">
+            <FileUpload
+              onChange={(files: File[]) => {
+                const file = files[0]
+                if (file && file.type === "application/pdf") {
+                  setPdfFile(file)
+                  setPdfUrl(URL.createObjectURL(file))
+                } else {
+                  toast.error("Please upload a PDF file")
+                }
+              }}
             />
-            <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-            <div className="text-muted-foreground text-center">
-              <div className="mb-2">Drag & drop your PDF here, or click to browse</div>
-              <div className="text-xs">(PDF only)</div>
-            </div>
           </div>
         ) : (
           <div className="w-full max-w-md flex flex-col">
@@ -198,7 +176,7 @@ export default function ChatToPdfPage() {
             </div>
 
             {pdfUrl && (
-              <div className="relative">
+              <div className="relative md:block hidden">
                 <iframe src={pdfUrl} title="PDF Preview" className="w-full h-[60vh] rounded border" />
               </div>
             )}
@@ -216,9 +194,8 @@ export default function ChatToPdfPage() {
         )}
       </div>
 
-      {/* Chat Section */}
-      <div className="w-full md:w-1/2 border-l border-border flex flex-col">
-        <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-4">
+      <div className="relative w-full h-full border-l border-border flex flex-col">
+        <div ref={chatContainerRef} className="overflow-y-auto md:h-[80%] h-96 p-6 space-y-4">
           {messages.length === 0 ? (
             <div className="text-muted-foreground text-center mt-20">
               {pdfFile ? "Upload your PDF and start chatting!" : "Upload a PDF to start chatting!"}
@@ -228,7 +205,7 @@ export default function ChatToPdfPage() {
               <div key={idx} className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
                 <div className="relative group">
                   <Card
-                    className={`max-w-xs md:max-w-md px-4 py-2 ${
+                    className={`max-w-xs md:text-base text-sm md:max-w-md px-4 py-2 ${
                       msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                     }`}
                   >
@@ -248,7 +225,6 @@ export default function ChatToPdfPage() {
                   )}
                 </div>
 
-                {/* References section for bot messages */}
                 {msg.sender === "bot" && msg.references && msg.references.length > 0 && (
                   <Collapsible className="w-full max-w-xs md:max-w-md mt-1">
                     <div className="flex items-center">
@@ -302,22 +278,31 @@ export default function ChatToPdfPage() {
         </div>
 
         <form
-          className="flex gap-2 p-4 border-t border-border"
+          className="p-4 absolute w-full bottom-2"
           onSubmit={(e) => {
             e.preventDefault()
             handleSend()
           }}
         >
-          <Input
-            className="flex-1"
-            placeholder={pdfFile ? "Type your question..." : "Upload a PDF first"}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={!pdfFile || isLoading}
-          />
-          <Button type="submit" disabled={!input.trim() || !pdfFile || isLoading}>
-            <Send className="h-4 w-4" />
-          </Button>
+          <div className=" bg-secondary rounded-3xl p-2 border">
+            <div className="flex flex-col items-end dark:bg-input/30 bg-transparent rounded-2xl">
+              <Input
+                className="rounded-2xl md:min-h-16 resize-none"
+                placeholder={pdfFile ? "Type your question..." : "Upload a PDF first"}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={isLoading}
+              />
+              <Button
+                variant={"outline"}
+                className="m-3"
+                type="submit"
+                disabled={!input.trim() || !pdfFile || isLoading}
+              >
+                Send
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
     </div>

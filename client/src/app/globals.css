@@ -120,3 +120,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hide scrollbar for all elements */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none; /* Firefox */
+}

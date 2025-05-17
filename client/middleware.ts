@@ -1,5 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { AwardIcon } from "lucide-react";
 
 const isProtectedRoute = createRouteMatcher(["/chat"]);
 export default clerkMiddleware(async (auth, req) => {

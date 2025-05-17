@@ -120,9 +120,9 @@ const ChatToPdfLandingPage = () => {
                 aria-hidden
                 className="bg-gradient-to-b to-background absolute inset-0 z-10 from-transparent from-35%"
               />
-              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-zinc-950/15 ring-1">
+              <div className="inset-shadow-2xs ring-background dark:inset-shadow-white/20 bg-background relative mx-auto max-w-5xl overflow-hidden rounded-2xl border p-4 shadow-lg shadow-stone-950/15 ring-1">
                 <div className="bg-background aspect-15/8 relative rounded-2xl border border-border/25 overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-blue-500 opacity-10"></div>
+                  <div className="absolute bg-secondary"></div>
                   <div className="flex h-full">
                     <div className="w-1/2 border-r border-border/25 p-6 flex flex-col">
                       <div className="flex items-center mb-4">
@@ -196,87 +196,9 @@ const ChatToPdfLandingPage = () => {
             </div>
           </div>
         </section>
-
-        {/* Features Section */}
-        <section
-          id="features"
-          className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
-        >
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
-                  Features
-                </div>
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                  Everything You Need for PDF Intelligence
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
-                  Our platform combines powerful AI with intuitive design to
-                  make your documents work for you.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  icon: <Upload className="h-10 w-10 text-primary" />,
-                  title: "Easy PDF Upload",
-                  description:
-                    "Drag and drop your PDFs or select from cloud storage. Support for documents of any size and complexity.",
-                },
-                {
-                  icon: <MessageSquare className="h-10 w-10 text-primary" />,
-                  title: "Natural Conversations",
-                  description:
-                    "Chat with your documents using natural language. Ask questions and get accurate answers instantly.",
-                },
-                {
-                  icon: <Search className="h-10 w-10 text-primary" />,
-                  title: "Smart Search",
-                  description:
-                    "Find exactly what you need with context-aware search that understands the meaning behind your queries.",
-                },
-                {
-                  icon: <Sparkles className="h-10 w-10 text-primary" />,
-                  title: "AI-Powered Insights",
-                  description:
-                    "Extract key information, summarize content, and discover patterns with advanced AI analysis.",
-                },
-                {
-                  icon: <FileText className="h-10 w-10 text-primary" />,
-                  title: "Multi-Document Support",
-                  description:
-                    "Compare and analyze multiple PDFs simultaneously. Connect information across documents.",
-                },
-                {
-                  icon: <ArrowRight className="h-10 w-10 text-primary" />,
-                  title: "Export & Share",
-                  description:
-                    "Save conversations, export insights, and share findings with your team or clients.",
-                },
-              ].map((feature, index) => (
-                <Card
-                  key={index}
-                  className="group relative overflow-hidden rounded-xl border p-6 shadow-sm transition-all hover:shadow-md hover:-translate-y-1"
-                >
-                  <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-primary/5 group-hover:bg-primary/10 transition-all duration-300"></div>
-                  <div className="relative space-y-2">
-                    <div className="mb-2">{feature.icon}</div>
-                    <h3 className="text-xl font-bold">{feature.title}</h3>
-                    <p className="text-muted-foreground">
-                      {feature.description}
-                    </p>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* How It Works Section */}
         <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
@@ -321,7 +243,7 @@ const ChatToPdfLandingPage = () => {
                       <span className="text-xl font-bold">{item.step}</span>
                     </div>
                     {index < 2 && (
-                      <div className="absolute hidden md:block top-8 left-[calc(100%-16px)] w-[calc(100%-32px)] h-[2px] bg-border">
+                      <div className="absolute hidden md:block top-8 left-[calc(100%-110px)] w-[calc(100%-32px)] h-[2px] bg-border">
                         <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-primary"></div>
                       </div>
                     )}
@@ -341,36 +263,11 @@ const ChatToPdfLandingPage = () => {
             </div>
           </div>
         </section>
-
-        {/* CTA Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/30">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Ready to Transform Your PDF Experience?
-                </h2>
-                <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed">
-                  Join thousands of professionals who are saving time and
-                  gaining deeper insights from their documents.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button size="lg" className="rounded-xl">
-                  Get Started for Free
-                </Button>
-                <Button size="lg" variant="outline" className="rounded-xl">
-                  View Demo
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
       <footer className="w-full border-t bg-muted/10">
-        <div className="container flex flex-col gap-6 py-8 md:py-12">
+        <div className="container mx-auto  flex flex-col gap-6 py-8 md:py-12">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
@@ -425,15 +322,7 @@ const ChatToPdfLandingPage = () => {
                 </ul>
               </div>
             ))}
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs text-muted-foreground">
-              &copy; {new Date().getFullYear()} ChatPDF. All rights reserved.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Made with ❤️ for document intelligence
-            </p>
-          </div>
+          </div>{" "}
         </div>
       </footer>
     </div>

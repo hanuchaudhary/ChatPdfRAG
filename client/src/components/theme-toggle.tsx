@@ -32,19 +32,18 @@ export const ThemeSwitcher = () => {
 
   return (
     <div
+      onClick={() => setTheme(theme == "dark" ? "light" : "dark")}
       className={cn(
-        "relative flex h-8 rounded-full bg-background p-1 ring-1 ring-border"
+        "relative flex h-8 rounded-full cursor-pointer bg-background p-1 ring-1 ring-border"
       )}
     >
       {themes.map(({ key, icon: Icon, label }) => {
         const isActive = theme === key;
-
         return (
           <button
             type="button"
             key={key}
-            className="relative h-6 w-6 rounded-full"
-            onClick={() => setTheme(key as "light" | "dark")}
+            className="relative h-6 w-6 rounded-full cursor-pointer"
             aria-label={label}
           >
             {isActive && (
