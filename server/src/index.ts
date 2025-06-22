@@ -11,10 +11,9 @@ app.use(cors());
 app.use(expess.json());
 
 const queue = new Queue("upload-queue", {
-  connection: {
-    host: "localhost",
-    port: 6379,
-  },
+  connection :{
+    url: process.env.REDIS_URL
+  }
 });
 
 const embeddings = new GoogleGenerativeAIEmbeddings({

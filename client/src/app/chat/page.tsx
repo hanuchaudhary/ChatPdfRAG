@@ -31,6 +31,119 @@ interface Message {
   references?: DocReference[]
 }
 
+const MarkdownRenderer = ({ content }: { content: string }) => {
+  const renderMarkdown = (text: string) => {
+    // Split by lines to process each line
+    const lines = text.split('\n');
+    const elements: React.ReactNode[] = [];
+    let listItems: string[] = [];
+    let inList = false;
+    let listType: 'ul' | 'ol' | null = null;
+
+    const flushList = () => {
+      if (listItems.length > 0) {
+        const ListComponent = listType === 'ol' ? 'ol' : 'ul';
+        elements.push(
+          <ListComponent key={elements.length} className={`mb-3 ml-4 ${listType === 'ol' ? 'list-decimal' : 'list-disc'} space-y-1`}>
+            {listItems.map((item, idx) => (
+              <li key={idx} className="text-sm leading-relaxed">
+                {processInlineFormatting(item)}
+              </li>
+            ))}
+          </ListComponent>
+        );
+        listItems = [];
+        inList = false;
+        listType = null;
+      }
+    };
+
+    const processInlineFormatting = (text: string) => {
+      // Process bold, italic, and code formatting
+      const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|`.*?`)/g);
+      return parts.map((part, idx) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return <strong key={idx} className="font-semibold">{part.slice(2, -2)}</strong>;
+        } else if (part.startsWith('*') && part.endsWith('*') && !part.startsWith('**')) {
+          return <em key={idx} className="italic">{part.slice(1, -1)}</em>;
+        } else if (part.startsWith('`') && part.endsWith('`')) {
+          return <code key={idx} className="bg-muted px-1 py-0.5 rounded text-xs font-mono">{part.slice(1, -1)}</code>;
+        }
+        return part;
+      });
+    };
+
+    lines.forEach((line, index) => {
+      const trimmedLine = line.trim();
+
+      // Handle headers
+      if (trimmedLine.startsWith('###')) {
+        flushList();
+        elements.push(
+          <h3 key={elements.length} className="text-base font-semibold mt-4 mb-2 text-foreground">
+            {processInlineFormatting(trimmedLine.slice(3).trim())}
+          </h3>
+        );
+      } else if (trimmedLine.startsWith('##')) {
+        flushList();
+        elements.push(
+          <h2 key={elements.length} className="text-lg font-semibold mt-4 mb-2 text-foreground">
+            {processInlineFormatting(trimmedLine.slice(2).trim())}
+          </h2>
+        );
+      } else if (trimmedLine.startsWith('#')) {
+        flushList();
+        elements.push(
+          <h1 key={elements.length} className="text-xl font-bold mt-4 mb-3 text-foreground">
+            {processInlineFormatting(trimmedLine.slice(1).trim())}
+          </h1>
+        );
+      }
+      // Handle unordered lists
+      else if (trimmedLine.match(/^[*+-]\s+/)) {
+        if (!inList || listType !== 'ul') {
+          flushList();
+          inList = true;
+          listType = 'ul';
+        }
+        listItems.push(trimmedLine.replace(/^[*+-]\s+/, ''));
+      }
+      // Handle ordered lists
+      else if (trimmedLine.match(/^\d+\.\s+/)) {
+        if (!inList || listType !== 'ol') {
+          flushList();
+          inList = true;
+          listType = 'ol';
+        }
+        listItems.push(trimmedLine.replace(/^\d+\.\s+/, ''));
+      }
+      // Handle empty lines
+      else if (trimmedLine === '') {
+        flushList();
+        if (elements.length > 0) {
+          elements.push(<div key={elements.length} className="h-2" />);
+        }
+      }
+      // Handle regular paragraphs
+      else if (trimmedLine.length > 0) {
+        flushList();
+        elements.push(
+          <p key={elements.length} className="text-sm leading-relaxed mb-2">
+            {processInlineFormatting(trimmedLine)}
+          </p>
+        );
+      }
+    });
+
+    // Flush any remaining list items
+    flushList();
+
+    return elements;
+  };
+
+  return <div className="space-y-1">{renderMarkdown(content)}</div>;
+};
+
 export default function ChatToPdfPage() {
   const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
@@ -205,11 +318,15 @@ export default function ChatToPdfPage() {
               <div key={idx} className={`flex flex-col ${msg.sender === "user" ? "items-end" : "items-start"}`}>
                 <div className="relative group">
                   <Card
-                    className={`max-w-xs md:text-base text-sm md:max-w-md px-4 py-2 ${
+                    className={`max-w-xs md:text-base text-sm md:max-w-2xl px-4 py-3 ${
                       msg.sender === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
                     }`}
                   >
-                    {msg.text}
+                    {msg.sender === "bot" ? (
+                      <MarkdownRenderer content={msg.text} />
+                    ) : (
+                      <div className="text-sm">{msg.text}</div>
+                    )}
                   </Card>
 
                   {msg.sender === "bot" && (
@@ -226,7 +343,7 @@ export default function ChatToPdfPage() {
                 </div>
 
                 {msg.sender === "bot" && msg.references && msg.references.length > 0 && (
-                  <Collapsible className="w-full max-w-xs md:max-w-md mt-1">
+                  <Collapsible className="w-full max-w-xs md:max-w-2xl mt-1">
                     <div className="flex items-center">
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="p-0 h-auto">

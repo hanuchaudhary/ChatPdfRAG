@@ -63,6 +63,9 @@ importers:
       '@types/multer':
         specifier: ^1.4.12
         version: 1.4.12
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
 packages:
 

@@ -42,8 +42,7 @@ const worker = new Worker(
   },
   {
     connection: {
-      host: "localhost",
-      port: 6379,
+      url : process.env.REDIS_URL
     },
     concurrency: 20,
   }
@@ -60,3 +59,4 @@ worker.on("progress", (job, progress) => {
 worker.on("failed", (job, err) => {
   console.log(`Job ${job?.id} failed with error: ${err.message}`);
 });
+

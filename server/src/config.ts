@@ -8,5 +8,8 @@ export const geminiClient = new GoogleGenAI({
   apiKey: geminiApiKey,
 });
 
-export const qdrantUrl = process.env.QDRANT_URL || "http://localhost:6333";
-export const qdrantClient = new QdrantClient({ url: process.env.QDRANT_URL });
+export const qdrantUrl = process.env.QDRANT_URL;
+export const qdrantClient = new QdrantClient({
+    url: qdrantUrl,
+    apiKey: process.env.QDRANT_API_KEY,
+});
