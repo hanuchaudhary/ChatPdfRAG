@@ -44,6 +44,7 @@ app.get("/", async (req: Request, res: Response) => {
   });
 });
 
+
 app.post(
   "/upload",
   upload.single("file"),
@@ -90,7 +91,7 @@ app.post("/chat", async (req: Request, res: Response) => {
       k: 2,
     });
     const docs = await retriever.invoke(query);
-    const SYSTEM_PROMPT = `You are a helpful assistant. Answer the question based on the provided context of the PDF document. And  give the answer in a conversational tone and in plain text format not in markdown format.
+    const SYSTEM_PROMPT = `You are a helpful assistant. Answer the question based on the provided context of the PDF document.
     Context: ${JSON.stringify(docs)}
     `;
 
