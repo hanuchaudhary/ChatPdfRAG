@@ -30,6 +30,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+
 app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({
     health: "Ok",
