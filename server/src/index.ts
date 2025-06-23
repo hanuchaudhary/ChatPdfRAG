@@ -11,9 +11,9 @@ app.use(cors());
 app.use(expess.json());
 
 const queue = new Queue("upload-queue", {
-  connection :{
-    url: process.env.REDIS_URL
-  }
+  connection: {
+    url: process.env.REDIS_URL,
+  },
 });
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -30,6 +30,18 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
+app.get("/", async (req: Request, res: Response) => {
+  res.status(200).json({
+    health: "Ok",
+    message:
+      "PDF Chat RAG server is running successfully! Upload PDFs and start chatting with your documents.",
+    status: "Active",
+    endpoints: {
+      upload: "/upload",
+      chat: "/chat",
+    },
+  });
+});
 
 app.post(
   "/upload",
