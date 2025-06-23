@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node build/index.js && node build/worker.js",
+    "start": "tsc && node build/index.js",
     "start:worker": "tsc && node build/worker.js"
   },
   "keywords": [],
